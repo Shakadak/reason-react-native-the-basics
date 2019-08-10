@@ -1,5 +1,15 @@
 open ReactNative;
 
+module Greeting = {
+    [@react.component]
+    let make = (~name: string) => {
+        let greeting = "Hello " ++ name;
+        <View style={Style.style(~alignItems=`center, ())}>
+            <Text>{React.string(greeting)}</Text>
+        </View>
+    }
+}
+
 let styles =
   Style.(
     StyleSheet.create({
@@ -9,7 +19,11 @@ let styles =
 
 [@react.component]
 let app = () => {
-    let uri = "https://upload.wikimedia.org/wikipedia/commons/d/de/Bananavarieties.jpg"
-    let source = Image.Source.fromUriSource(Image.uriSource(~uri, ~width=193., ~height=110., ()));
-    <Image source/>
+    let style =
+        Style.style(~alignItems=`center, ~top=Style.dp(50.), ());
+    <View style>
+        <Greeting name="Rexxar" />
+        <Greeting name="Jaina" />
+        <Greeting name="Valeera" />
+    </View>
 };
