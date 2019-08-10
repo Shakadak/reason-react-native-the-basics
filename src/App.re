@@ -1,28 +1,16 @@
 open ReactNative;
 
-module Blink = {
-    [@react.component]
-    let make = (~text) => {
-        let (isShowingText, onChange) = React.useState(() => true);
-        React.useEffect0(() => {
-            let timerId = Js.Global.setInterval(() => onChange((!)), 1000);
-            Some(() => Js.Global.clearInterval(timerId))
-        });
-
-        if (!isShowingText) {
-            React.null
-        } else {
-            <Text>{React.string(text)}</Text>
-        }
-    };
-}
+let styles = StyleSheet.create({
+    "bigBlue": Style.style(~color="blue", ~fontWeight=`bold, ~fontSize=30., ()),
+    "red": Style.style(~color="red", ()),
+});
 
 [@react.component]
 let app = () => {
     <View>
-        <Blink text="I love to blink" />
-        <Blink text="Yes blinking is so great" />
-        <Blink text="Why did they ever take this out of HTML" />
-        <Blink text="Look at me look at me look at me" />
+        <Text style=styles##red>"just red"->React.string</Text>
+        <Text style=styles##bigBlue>"just bigBlue"->React.string</Text>
+        <Text style=Style.array([|styles##bigBlue, styles##red|])>{React.string("bigBlue, then red")}</Text>
+        <Text style=Style.array([|styles##red, styles##bigBlue|])>{React.string("red, then bigBlue")}</Text>
     </View>
 };
