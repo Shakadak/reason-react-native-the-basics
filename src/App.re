@@ -8,9 +8,8 @@ let styles = StyleSheet.create({
 [@react.component]
 let app = () => {
     <View>
-        <Text style=styles##red>"just red"->React.string</Text>
-        <Text style=styles##bigBlue>"just bigBlue"->React.string</Text>
-        <Text style=Style.array([|styles##bigBlue, styles##red|])>{React.string("bigBlue, then red")}</Text>
-        <Text style=Style.array([|styles##red, styles##bigBlue|])>{React.string("red, then bigBlue")}</Text>
+        <View style=Style.(style(~width=50.->dp, ~height=50.->dp, ~backgroundColor="powderblue", ()))/>
+        <View style=Style.(style(~width=100.->dp, ~height=100.->dp, ~backgroundColor="skyblue", ()))/>
+        <View style=Style.(style(~width=150.->dp, ~height=150.->dp, ~backgroundColor="steelblue", ()))/>
     </View>
 };
