@@ -7,9 +7,9 @@ let styles = StyleSheet.create({
 
 [@react.component]
 let app = () => {
-    <View>
-        <View style=Style.(style(~width=50.->dp, ~height=50.->dp, ~backgroundColor="powderblue", ()))/>
-        <View style=Style.(style(~width=100.->dp, ~height=100.->dp, ~backgroundColor="skyblue", ()))/>
-        <View style=Style.(style(~width=150.->dp, ~height=150.->dp, ~backgroundColor="steelblue", ()))/>
+    <View style=Style.style(~height=300.->Style.dp, ())>
+        <View style=Style.(style(~flex=1., ~backgroundColor="powderblue", ()))/>
+        <View style=Style.(style(~flex=2., ~backgroundColor="skyblue", ()))/>
+        <View style=Style.(style(~flex=3., ~backgroundColor="steelblue", ()))/>
     </View>
 };
