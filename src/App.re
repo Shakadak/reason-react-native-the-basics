@@ -1,48 +1,42 @@
 open ReactNative;
 
-let styles = StyleSheet.create({
-    "bigBlue": Style.style(~color="blue", ~fontWeight=`bold, ~fontSize=30., ()),
-    "red": Style.style(~color="red", ()),
-});
+[@bs.val] external alert : string => unit = "alert" ;
 
-module PizzaTranslator = {
+let styles = Style.(StyleSheet.create({
+    "container": style(~flex=1., ~justifyContent=`center, ()),
+    "buttonContainer": style(~margin=dp(20.), ()),
+    "alternativeLayoutButtonContainer": style(~margin=dp(20.), ~flexDirection=`row, ~justifyContent=`spaceBetween, ()),
+}));
+
+module ButtonBasics = {
+    let onPress = (_) => alert("You tapped the button!");
+
     [@react.component]
     let make = () => {
-        let (text, onChange) = React.useState(() => "");
-        let pizzas =
-            text
-            |> Js.String.splitByRe([%re "/\\s+/"])
-            |> Array.map(fun
-                | Some(s) when String.length(s) > 0 => {js|🍕|js}
-                | _ => "")
-            |> Js.String2.concatMany("");
-
-        Js.log(text);
-        Js.log(pizzas);
-
-        <View style=Style.(style(~padding=dp(10.), ()))>
-            <TextInput
-                style=Style.(style(~height=dp(40.), ()))
-                placeholder="Type here to translate!"
-                onChangeText={(x) => onChange(_ => x)}
-                value=text
-            />
-            <Text style=Style.(style(~padding=dp(10.), ~fontSize=42., ()))>
-                {React.string(pizzas)}
-            </Text>
+        <View style=styles##container>
+            <View style=styles##buttonContainer>
+                <Button onPress title="Press me"/>
+            </View>
+            <View style=styles##buttonContainer>
+                <Button onPress title="Press me" color="#841584"/>
+            </View>
+            <View style=styles##alternativeLayoutButtonContainer>
+                <Button onPress title="This looks great!"/>
+                <Button onPress title="OK!" color="#841584"/>
+            </View>
         </View>
     }
 }
 
 [@react.component]
 let app = () => {
-    <View style=Style.style(
+    /*<View style=Style.style(
         ~flex=1.,
         ~flexDirection=`column,
         ~justifyContent=`center,
         ~alignItems=`center,
         ~flexWrap=`wrap,
-        ())>
-        <PizzaTranslator/>
-    </View>
+        ())>*/
+        <ButtonBasics/>
+    //</View>
 };
