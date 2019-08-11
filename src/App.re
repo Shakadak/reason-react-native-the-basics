@@ -3,40 +3,50 @@ open ReactNative;
 [@bs.val] external alert : string => unit = "alert" ;
 
 let styles = Style.(StyleSheet.create({
-    "container": style(~flex=1., ~justifyContent=`center, ()),
-    "buttonContainer": style(~margin=dp(20.), ()),
-    "alternativeLayoutButtonContainer": style(~margin=dp(20.), ~flexDirection=`row, ~justifyContent=`spaceBetween, ()),
+    "container": style(~paddingTop=dp(60.), ~alignItems=`center, ()),
+    "button": style(~marginBottom=dp(30.), ~width=dp(260.), ~alignItems=`center, ~backgroundColor="#2196F3", ()),
+    "buttonText": style(~textAlign=`center, ~padding=dp(20.), ~color="white", ()),
 }));
 
 module ButtonBasics = {
     let onPress = (_) => alert("You tapped the button!");
+    let onLongPress = (_) => alert("You long-pressed the button!");
 
     [@react.component]
     let make = () => {
         <View style=styles##container>
-            <View style=styles##buttonContainer>
-                <Button onPress title="Press me"/>
-            </View>
-            <View style=styles##buttonContainer>
-                <Button onPress title="Press me" color="#841584"/>
-            </View>
-            <View style=styles##alternativeLayoutButtonContainer>
-                <Button onPress title="This looks great!"/>
-                <Button onPress title="OK!" color="#841584"/>
-            </View>
+            <TouchableHighlight onPress underlayColor="white">
+                <View style=styles##button>
+                    <Text style=styles##buttonText>{React.string("TouchableHighlight")}</Text>
+                </View>
+            </TouchableHighlight>
+            <TouchableOpacity onPress>
+                <View style=styles##button>
+                    <Text style=styles##buttonText>{React.string("TouchableOpacity")}</Text>
+                </View>
+            </TouchableOpacity>
+            <TouchableNativeFeedback
+                onPress
+                background=?{Platform.os == Platform.android ? Some(TouchableNativeFeedback.Background.selectableBackground()) : None}>
+                <View style=styles##button>
+                    <Text style=styles##buttonText>{React.string("TouchableNativeFeedback " ++ (Platform.os == Platform.android ? "(Android only)" : ""))}</Text>
+                </View>
+            </TouchableNativeFeedback>
+            <TouchableWithoutFeedback onPress>
+                <View style=styles##button>
+                    <Text style=styles##buttonText>{React.string("TouchableWithoutFeedback")}</Text>
+                </View>
+            </TouchableWithoutFeedback>
+            <TouchableHighlight onPress onLongPress underlayColor="white">
+                <View style=styles##button>
+                    <Text style=styles##buttonText>{React.string("Touchable with Long Press")}</Text>
+                </View>
+            </TouchableHighlight>
         </View>
     }
 }
 
 [@react.component]
 let app = () => {
-    /*<View style=Style.style(
-        ~flex=1.,
-        ~flexDirection=`column,
-        ~justifyContent=`center,
-        ~alignItems=`center,
-        ~flexWrap=`wrap,
-        ())>*/
         <ButtonBasics/>
-    //</View>
 };
