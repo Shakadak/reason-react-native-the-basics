@@ -17,47 +17,63 @@ let styles = Style.(StyleSheet.create({
     ),
 }));
 
-module SectionListBasics = {
-    let makeSection = (~data,
-                       ~key=?,
-                       ~renderItem=?,
-                       ~itemSeparatorComponent=?,
-                       ~keyExtractor=?,
-                       ()) => {
-        "data": data,
-        "key": key,
-        "renderItem": renderItem,
-        "ItemSeparatorComponent": itemSeparatorComponent,
-        "keyExtractor": keyExtractor,
+module FetchExample = {
+    let inspect = (x) => {
+        Js.log(x);
+        x
     };
-    let sections = [|
-        makeSection(~key="D", ~data = [|"Devin", "Dan", "Dominic"|], ()),
-        makeSection(~key="J", ~data = [|"Jackson", "James", "Joel", "John", "Jillian", "Jimmy", "Julie"|], ()),
-    |];
 
-    let keyExtractor = (_item, index) => { Js.log(index) ; string_of_int(index) };
+    let jsonExn = (f, x) => Belt.Option.getExn(f(x));
 
-    let renderItem = (obj) => <Text style=styles##item>{React.string(obj##item)}</Text>;
-
-    let renderSectionHeader = (obj : VirtualizedSectionList.renderSectionHeaderProps(string)) => {
-        let key = switch obj##section##key {
-            | Some(key) => key
-            | None => "Default Section"
-        };
-        <Text style=styles##sectionHeader>
-            {React.string(key)}
-        </Text>
+    type movie = {
+        id: string,
+        title: string,
+        releaseYear: string,
     };
+
+    let jsonToMovie = (obj) => {
+        id: jsonExn(Js.Json.decodeString, Js.Dict.unsafeGet(obj, "id")),
+        title: jsonExn(Js.Json.decodeString, Js.Dict.unsafeGet(obj, "title")),
+        releaseYear: jsonExn(Js.Json.decodeString, Js.Dict.unsafeGet(obj, "releaseYear")),
+    };
+
+    let getMovies = (x) => {
+        x
+        |> jsonExn(Js.Json.decodeObject)
+        |> Js.Dict.unsafeGet(_, "movies")
+        |> jsonExn(Js.Json.decodeArray)
+        |> Array.map(x => jsonToMovie(jsonExn(Js.Json.decodeObject, x)), _)
+    };
+
+    let renderItem = (obj) => <Text>{React.string(obj##item.title ++ ", " ++ obj##item.releaseYear)}</Text>;
+
+    let keyExtractor = (obj, _index) => obj.id;
 
     [@react.component]
     let make = () => {
-        <View style=styles##container>
-            <SectionList sections keyExtractor renderItem renderSectionHeader/>
-        </View>
+        let (data, updateData) = React.useState(() => None);
+        React.useEffect0(() => {
+            let _ = Js.Promise.(
+                Fetch.fetch("https://facebook.github.io/react-native/movies.json")
+                |> then_(Fetch.Response.json)
+                |> then_((x) => resolve(updateData(_ => Some(getMovies(x)))))
+            );
+            None
+        });
+
+        switch data {
+            | None => <View style=Style.(style(~flex=1., ~paddingTop=20.->dp, ()))><ActivityIndicator/></View>
+            | Some(data) => {
+                <View style=Style.(style(~flex=1., ~paddingTop=dp(20.), ()))>
+                    <FlatList data renderItem keyExtractor/>
+                </View>
+            }
+        }
     }
-}
+};
 
 [@react.component]
 let app = () => {
-        <SectionListBasics/>
+    Js.log("achoo");
+    <FetchExample/>
 };
