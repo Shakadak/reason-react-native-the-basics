@@ -3,67 +3,40 @@ open ReactNative;
 [@bs.val] external alert : string => unit = "alert" ;
 
 let styles = Style.(StyleSheet.create({
-    "container": style(~paddingTop=dp(60.), ~alignItems=`center, ()),
-    "button": style(~marginBottom=dp(30.), ~width=dp(260.), ~alignItems=`center, ~backgroundColor="#2196F3", ()),
-    "buttonText": style(~textAlign=`center, ~padding=dp(20.), ~color="white", ()),
+    "container": style(~flex=1., ~paddingTop=dp(22.), ()),
+    "item": style(~padding=dp(10.), ~fontSize=18., ~height=dp(44.), ()),
 }));
 
-module ReactTinyLogo = {
-    [@react.component]
-    let make = () => {
-         //let uri = "https://facebook.github.io/react-native/img/tiny_logo.png";
-         let uri = "https://upload.wikimedia.org/wikipedia/commons/d/de/Bananavarieties.jpg";
-         let source = Image.Source.fromUriSource(Image.uriSource(~uri, ~width=64., ~height=64., ())); 
-        <Image source/>
-    }
-}
+module FlatListBasics = {
+    type name = {
+        key: string,
+    };
+    let data : array(name) = [|
+        {key: "Devin"},
+        {key: "Dan"},
+        {key: "Dominic"},
+        {key: "Jackson"},
+        {key: "James"},
+        {key: "Joel"},
+        {key: "John"},
+        {key: "Jillian"},
+        {key: "Jimmy"},
+        {key: "Julie"},
+    |];
 
-module IScrolledDownAndWhatHappenedNextShockedMe = {
+    let keyExtractor = (item, _index) => item.key;
+
+    let renderItem = (item) => <Text style=styles##item>{React.string(item##item.key)}</Text>;
+
     [@react.component]
     let make = () => {
-        <ScrollView>
-            <Text style=Style.(style(~fontSize=96., ()))>{React.string("Scroll me plz")}</Text>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <Text style=Style.(style(~fontSize=96., ()))>{React.string("If you like")}</Text>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <Text style=Style.(style(~fontSize=96., ()))>{React.string("Scrolling down")}</Text>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <Text style=Style.(style(~fontSize=96., ()))>{React.string("What's the best")}</Text>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <Text style=Style.(style(~fontSize=96., ()))>{React.string("Framework around?")}</Text>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <Text style=Style.(style(~fontSize=96., ()))>{React.string("React Native")}</Text>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <ReactTinyLogo/>
-            <Text style=Style.(style(~fontSize=96., ()))>{React.string("But with ReasonML")}</Text>
-        </ScrollView>
+        <View style=styles##container>
+            <FlatList data keyExtractor renderItem/>
+        </View>
     }
 }
 
 [@react.component]
 let app = () => {
-        <IScrolledDownAndWhatHappenedNextShockedMe/>
+        <FlatListBasics/>
 };
