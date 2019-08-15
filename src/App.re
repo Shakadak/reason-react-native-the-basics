@@ -8,45 +8,62 @@ let styles = Style.(StyleSheet.create({
     "buttonText": style(~textAlign=`center, ~padding=dp(20.), ~color="white", ()),
 }));
 
-module ButtonBasics = {
-    let onPress = (_) => alert("You tapped the button!");
-    let onLongPress = (_) => alert("You long-pressed the button!");
-
+module ReactTinyLogo = {
     [@react.component]
     let make = () => {
-        <View style=styles##container>
-            <TouchableHighlight onPress underlayColor="white">
-                <View style=styles##button>
-                    <Text style=styles##buttonText>{React.string("TouchableHighlight")}</Text>
-                </View>
-            </TouchableHighlight>
-            <TouchableOpacity onPress>
-                <View style=styles##button>
-                    <Text style=styles##buttonText>{React.string("TouchableOpacity")}</Text>
-                </View>
-            </TouchableOpacity>
-            <TouchableNativeFeedback
-                onPress
-                background=?{Platform.os == Platform.android ? Some(TouchableNativeFeedback.Background.selectableBackground()) : None}>
-                <View style=styles##button>
-                    <Text style=styles##buttonText>{React.string("TouchableNativeFeedback " ++ (Platform.os == Platform.android ? "(Android only)" : ""))}</Text>
-                </View>
-            </TouchableNativeFeedback>
-            <TouchableWithoutFeedback onPress>
-                <View style=styles##button>
-                    <Text style=styles##buttonText>{React.string("TouchableWithoutFeedback")}</Text>
-                </View>
-            </TouchableWithoutFeedback>
-            <TouchableHighlight onPress onLongPress underlayColor="white">
-                <View style=styles##button>
-                    <Text style=styles##buttonText>{React.string("Touchable with Long Press")}</Text>
-                </View>
-            </TouchableHighlight>
-        </View>
+         //let uri = "https://facebook.github.io/react-native/img/tiny_logo.png";
+         let uri = "https://upload.wikimedia.org/wikipedia/commons/d/de/Bananavarieties.jpg";
+         let source = Image.Source.fromUriSource(Image.uriSource(~uri, ~width=64., ~height=64., ())); 
+        <Image source/>
+    }
+}
+
+module IScrolledDownAndWhatHappenedNextShockedMe = {
+    [@react.component]
+    let make = () => {
+        <ScrollView>
+            <Text style=Style.(style(~fontSize=96., ()))>{React.string("Scroll me plz")}</Text>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <Text style=Style.(style(~fontSize=96., ()))>{React.string("If you like")}</Text>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <Text style=Style.(style(~fontSize=96., ()))>{React.string("Scrolling down")}</Text>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <Text style=Style.(style(~fontSize=96., ()))>{React.string("What's the best")}</Text>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <Text style=Style.(style(~fontSize=96., ()))>{React.string("Framework around?")}</Text>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <Text style=Style.(style(~fontSize=96., ()))>{React.string("React Native")}</Text>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <ReactTinyLogo/>
+            <Text style=Style.(style(~fontSize=96., ()))>{React.string("But with ReasonML")}</Text>
+        </ScrollView>
     }
 }
 
 [@react.component]
 let app = () => {
-        <ButtonBasics/>
+        <IScrolledDownAndWhatHappenedNextShockedMe/>
 };
