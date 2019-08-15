@@ -5,38 +5,59 @@ open ReactNative;
 let styles = Style.(StyleSheet.create({
     "container": style(~flex=1., ~paddingTop=dp(22.), ()),
     "item": style(~padding=dp(10.), ~fontSize=18., ~height=dp(44.), ()),
+    "sectionHeader": style(
+        ~paddingTop=dp(2.),
+        ~paddingLeft=dp(10.),
+        ~paddingRight=dp(10.),
+        ~paddingBottom=dp(2.),
+        ~fontSize=14.,
+        ~fontWeight=`bold,
+        ~backgroundColor="rgba(247,247,247,1.0)",
+        ()
+    ),
 }));
 
-module FlatListBasics = {
-    type name = {
-        key: string,
+module SectionListBasics = {
+    let makeSection = (~data,
+                       ~key=?,
+                       ~renderItem=?,
+                       ~itemSeparatorComponent=?,
+                       ~keyExtractor=?,
+                       ()) => {
+        "data": data,
+        "key": key,
+        "renderItem": renderItem,
+        "ItemSeparatorComponent": itemSeparatorComponent,
+        "keyExtractor": keyExtractor,
     };
-    let data : array(name) = [|
-        {key: "Devin"},
-        {key: "Dan"},
-        {key: "Dominic"},
-        {key: "Jackson"},
-        {key: "James"},
-        {key: "Joel"},
-        {key: "John"},
-        {key: "Jillian"},
-        {key: "Jimmy"},
-        {key: "Julie"},
+    let sections = [|
+        makeSection(~key="D", ~data = [|"Devin", "Dan", "Dominic"|], ()),
+        makeSection(~key="J", ~data = [|"Jackson", "James", "Joel", "John", "Jillian", "Jimmy", "Julie"|], ()),
     |];
 
-    let keyExtractor = (item, _index) => item.key;
+    let keyExtractor = (_item, index) => { Js.log(index) ; string_of_int(index) };
 
-    let renderItem = (item) => <Text style=styles##item>{React.string(item##item.key)}</Text>;
+    let renderItem = (obj) => <Text style=styles##item>{React.string(obj##item)}</Text>;
+
+    let renderSectionHeader = (obj : VirtualizedSectionList.renderSectionHeaderProps(string)) => {
+        let key = switch obj##section##key {
+            | Some(key) => key
+            | None => "Default Section"
+        };
+        <Text style=styles##sectionHeader>
+            {React.string(key)}
+        </Text>
+    };
 
     [@react.component]
     let make = () => {
         <View style=styles##container>
-            <FlatList data keyExtractor renderItem/>
+            <SectionList sections keyExtractor renderItem renderSectionHeader/>
         </View>
     }
 }
 
 [@react.component]
 let app = () => {
-        <FlatListBasics/>
+        <SectionListBasics/>
 };
